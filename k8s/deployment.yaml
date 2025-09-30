@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aumbit-app
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: aumbit
+  template:
+    metadata:
+      labels:
+        app: aumbit
+    spec:
+      serviceAccountName: aumbit-sa  # For IRSA if using AWS SES
+      containers:
+      - name: aumbit
+        image: YOUR_ECR_REGISTRY/aumbit-app:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: aumbit-secrets
+              key: database-url
+        - name: NEXTAUTH_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: aumbit-secrets
+              key: nextauth-secret
+        - name: NEXTAUTH_URL
+          value: "https://your-domain.com"  # Update with your actual domain
+        - name: AWS_REGION
+          value: "us-east-1"
+        - name: SES_FROM_EMAIL
+          value: "noreply@colate.io"
+        - name: ADMIN_EMAILS
+          value: "prasad.p@colate.io,kumar.g@aumbit.io"
+        - name: NEXT_PUBLIC_ENABLE_TRACKING
+          value: "true"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aumbit-service
+spec:
+  selector:
+    app: aumbit
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: LoadBalancer  # Or ClusterIP if using Ingress

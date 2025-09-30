@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: aumbit_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: aumbitpass
+      POSTGRES_USER: aumbit_user
+      POSTGRES_PASSWORD: aumbit_password_2025
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - aumbit_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aumbit_user -d aumbitpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Optional: pgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: aumbit_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@aumbit.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - aumbit_network
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  aumbit_network:
+    driver: bridge

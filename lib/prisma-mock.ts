@@ -1,0 +1,46 @@
+// Mock Prisma client for when database is not available
+export const prismaMock = {
+  contactSubmission: {
+    create: async () => { throw new Error("Database not connected") },
+    findMany: async () => { throw new Error("Database not connected") },
+    findUnique: async () => { throw new Error("Database not connected") },
+    update: async () => { throw new Error("Database not connected") },
+    delete: async () => { throw new Error("Database not connected") },
+    count: async () => { throw new Error("Database not connected") },
+  },
+  user: {
+    create: async () => { throw new Error("Database not connected") },
+    findMany: async () => { throw new Error("Database not connected") },
+    findUnique: async () => { throw new Error("Database not connected") },
+    update: async () => { throw new Error("Database not connected") },
+    delete: async () => { throw new Error("Database not connected") },
+    count: async () => { throw new Error("Database not connected") },
+  },
+  account: {
+    create: async () => { throw new Error("Database not connected") },
+    findMany: async () => { throw new Error("Database not connected") },
+    findUnique: async () => { throw new Error("Database not connected") },
+    update: async () => { throw new Error("Database not connected") },
+    delete: async () => { throw new Error("Database not connected") },
+  },
+  session: {
+    create: async () => { throw new Error("Database not connected") },
+    findMany: async () => { throw new Error("Database not connected") },
+    findUnique: async () => { throw new Error("Database not connected") },
+    update: async () => { throw new Error("Database not connected") },
+    delete: async () => { throw new Error("Database not connected") },
+  },
+  verificationToken: {
+    create: async () => { throw new Error("Database not connected") },
+    findMany: async () => { throw new Error("Database not connected") },
+    findUnique: async () => { throw new Error("Database not connected") },
+    update: async () => { throw new Error("Database not connected") },
+    delete: async () => { throw new Error("Database not connected") },
+  },
+  $connect: async () => { throw new Error("Database not connected") },
+  $disconnect: async () => { },
+  $on: () => { },
+  $transaction: async () => { throw new Error("Database not connected") },
+  $queryRaw: async () => { throw new Error("Database not connected") },
+  $executeRaw: async () => { throw new Error("Database not connected") },
+};

@@ -1,0 +1,14 @@
+include:
+  - project: 'aumbit-marketing/ci-cd/templates'
+    ref: 'main'
+    file: 'ci-cd-nodejs.yaml'
+
+stages:
+  - publish
+  - deploy
+
+deploy:
+  stage: deploy
+  variables:
+    K8S_SPECS_PROJECT_PATH: aumbit-marketing/argocd/aumbit-site
+    K8S_SPECS_DIR: .
